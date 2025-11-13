@@ -61,8 +61,8 @@ function parseDebitFormat(tokens) {
 
   // Parse amount (token[1])
   const amountStr = tokens[1];
-  const amount = parseInt(amountStr, 10);
-  if (Number.isNaN(amount) || amountStr !== amount.toString() || amount <= 0) {
+  const amount = Number(amountStr);
+  if (Number.isNaN(amount)) {
     return {
       ...result,
       status_code: STATUS_CODES.MALFORMED_INSTRUCTION,
@@ -231,8 +231,8 @@ function parseCreditFormat(tokens) {
 
   // Parse amount (token[1])
   const amountStr = tokens[1];
-  const amount = parseInt(amountStr, 10);
-  if (Number.isNaN(amount) || amountStr !== amount.toString() || amount <= 0) {
+  const amount = Number(amountStr);
+  if (Number.isNaN(amount)) {
     return {
       ...result,
       status_code: STATUS_CODES.MALFORMED_INSTRUCTION,

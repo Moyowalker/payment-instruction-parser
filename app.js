@@ -9,14 +9,15 @@ const { createQueue } = require('@app-core/queue');
 
 const canLogEndpointInformation = process.env.CAN_LOG_ENDPOINT_INFORMATION;
 
-createConnection({
-  uri: process.env.MONGODB_URI,
-});
+// Database not required for payment instruction parser assessment
+// createConnection({
+//   uri: process.env.MONGODB_URI,
+// });
 
-createQueue();
+// createQueue();
 
 const server = createServer({
-  port: process.env.PORT,
+  port: process.env.PORT || 3000,
   JSONLimit: '150mb',
   enableCors: true,
 });
