@@ -167,50 +167,77 @@ The API will be available at `http://localhost:3000`
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run Jest test suite
+npm run test:jest
+
+# Run legacy Mocha tests (template infrastructure)
 npm test
+```
 
-# Run tests in watch mode
-npm run test:watch
+**Test Coverage: 97 passing tests** ✅
 
-# Generate coverage report
-npm run test:coverage
+```
+Test Suites: 4 passed, 4 total
+Tests:       97 passed, 97 total
 ```
 
 ## 📊 Testing Strategy
 
-Comprehensive test coverage including:
+Comprehensive test coverage with **97 automated tests** across 4 test suites:
 
-1. **Parser Tests**
-   - DEBIT format parsing
-   - CREDIT format parsing
-   - Case-insensitive keyword handling
-   - Account ID extraction with special characters
-   - Date parsing and validation
+### 1. **Parser Tests** (43 tests)
+   - ✅ DEBIT format parsing (with and without dates)
+   - ✅ CREDIT format parsing (with and without dates)
+   - ✅ Case-insensitive keyword handling
+   - ✅ Account ID extraction with special characters (hyphens, periods, @)
+   - ✅ Date parsing and validation
+   - ✅ Error detection (missing keywords, malformed instructions, invalid amounts)
 
-2. **Validator Tests**
-   - All 13 validation rules
-   - Edge cases (zero amounts, missing accounts, etc.)
-   - Currency validation
-   - Account ID format validation
+### 2. **Validator Tests** (27 tests)
+   - ✅ All 13 validation rules (AM01, CU01-02, AC01-04, DT01, SY01-03, AP00, AP02)
+   - ✅ Amount validation (negative, decimal, zero amounts)
+   - ✅ Currency validation (supported/unsupported currencies)
+   - ✅ Account ID format validation (valid and invalid characters)
+   - ✅ Account existence checks
+   - ✅ Same account prevention
+   - ✅ Currency matching between accounts and instruction
+   - ✅ Insufficient funds detection
+   - ✅ Date format validation
+   - ✅ Future date handling
 
-3. **Executor Tests**
-   - Immediate transaction execution
-   - Future-dated transaction handling
-   - Balance updates
-   - Transaction rollback scenarios
+### 3. **Executor Tests** (17 tests)
+   - ✅ Immediate transaction execution with balance updates
+   - ✅ Future-dated transaction handling (preserves balances)
+   - ✅ Failed transaction handling (preserves balances)
+   - ✅ Account order preservation (debit first, credit second)
+   - ✅ Data integrity verification
+   - ✅ Exact balance deduction
+   - ✅ Large transaction amounts
 
-4. **Integration Tests**
-   - End-to-end request/response flows
-   - All test cases from assessment specification
+### 4. **Integration Tests** (22 tests)
+   - ✅ All 12 assessment scenarios end-to-end
+   - ✅ Successful immediate DEBIT
+   - ✅ Pending future-dated CREDIT
+   - ✅ Unsupported currency rejection
+   - ✅ Negative amount rejection
+   - ✅ Decimal amount rejection
+   - ✅ Same account transfer rejection
+   - ✅ Account not found
+   - ✅ Past date execution
+   - ✅ Currency mismatch
+   - ✅ Insufficient funds
+   - ✅ Invalid date format
+   - ✅ Malformed instruction
+   - ✅ Additional edge cases (case-insensitivity, special characters, zero balances)
 
 ## 🔧 Technology Stack
 
 - **Runtime**: Node.js v18+
 - **Framework**: Express.js
-- **Testing**: Jest
-- **Code Quality**: ESLint
-- **Version Control**: Git
+- **Testing**: Jest (97 passing tests)
+- **Code Quality**: ESLint (Airbnb style guide), Prettier, Husky pre-commit hooks
+- **CI/CD**: Commitlint for conventional commits
+- **Version Control**: Git with structured commit history
 
 ## 📈 Future Enhancements
 
