@@ -11,7 +11,7 @@ const { TRANSACTION_STATUS } = require('./constants');
  * Get the accounts involved in the transaction, maintaining request order
  * @param {object} validatedData - The validated instruction data
  * @param {array} accounts - Array of account objects from the request
- * @returns {array} Array of involved accounts in original request order
+ * @returns {array} Array of involved accounts ordered by debit then credit
  */
 function getInvolvedAccounts(validatedData, accounts) {
   // If accounts cannot be identified (parsing failed), return empty array
@@ -19,13 +19,22 @@ function getInvolvedAccounts(validatedData, accounts) {
     return [];
   }
 
-  // Get the account IDs involved in the transaction
-  const involvedIds = new Set(
-    [validatedData.debit_account, validatedData.credit_account].filter(Boolean)
-  );
+  // Create account map for lookup
+  const accountMap = {};
+  accounts.forEach((account) => {
+    accountMap[account.account_id] = account;
+  });
 
-  // Filter accounts maintaining original request order
-  return accounts.filter((account) => involvedIds.has(account.id));
+  // Return accounts in transaction order: debit account first, then credit account
+  const result = [];
+  if (validatedData.debit_account && accountMap[validatedData.debit_account]) {
+    result.push(accountMap[validatedData.debit_account]);
+  }
+  if (validatedData.credit_account && accountMap[validatedData.credit_account]) {
+    result.push(accountMap[validatedData.credit_account]);
+  }
+
+  return result;
 }
 
 /**
@@ -46,7 +55,7 @@ function executeTransaction(validatedData, accounts) {
     return {
       ...validatedData,
       accounts: involvedAccounts.map((account) => ({
-        id: account.id,
+        account_id: account.account_id,
         balance: account.balance,
         balance_before: account.balance,
         currency: account.currency.toUpperCase(),
@@ -60,14 +69,14 @@ function executeTransaction(validatedData, accounts) {
     let newBalance = account.balance;
 
     // Update balance based on account role in transaction
-    if (account.id === validatedData.debit_account) {
+    if (account.account_id === validatedData.debit_account) {
       newBalance = account.balance - validatedData.amount;
-    } else if (account.id === validatedData.credit_account) {
+    } else if (account.account_id === validatedData.credit_account) {
       newBalance = account.balance + validatedData.amount;
     }
 
     return {
-      id: account.id,
+      account_id: account.account_id,
       balance: newBalance,
       balance_before: balanceBefore,
       currency: account.currency.toUpperCase(),

@@ -146,7 +146,7 @@ function validateInstruction(parsedData, accounts) {
   // Create accounts map for quick lookups
   const accountsMap = {};
   accounts.forEach((account) => {
-    accountsMap[account.id] = account;
+    accountsMap[account.account_id] = account;
   });
 
   // Validate amount
