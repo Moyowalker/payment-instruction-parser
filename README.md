@@ -4,7 +4,25 @@
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-4.x-lightgrey.svg)](https://expressjs.com/)
+[![Tests](https://img.shields.io/badge/tests-97%20passing-brightgreen.svg)](https://github.com/Moyowalker/payment-instruction-parser)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+## 🚀 Live Demo
+
+**Production API:** https://payment-instruction-parser-j7rh.onrender.com
+
+Try it now:
+```bash
+curl -X POST https://payment-instruction-parser-j7rh.onrender.com/payment-instructions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accounts": [
+      {"account_id": "a", "balance": 200, "currency": "USD"},
+      {"account_id": "b", "balance": 300, "currency": "USD"}
+    ],
+    "instruction": "DEBIT 30 USD FROM ACCOUNT a FOR CREDIT TO ACCOUNT b"
+  }'
+```
 
 ## 🎯 Overview
 
